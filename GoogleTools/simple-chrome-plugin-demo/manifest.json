@@ -1,28 +1,49 @@
 {
-	"manifest_version": 2,
-	"name": "Chrome插件demo",
-	"version": "1.0",
-	"description": "最简单的Chrome插件demo，需要快速做一个简单的插件时可以基于这个仓库开发",
-	"author": "sxei",
-	"icons":
-	{
-		"48": "icon.png",
-		"128": "icon.png"
+	"name": "邮件群发",
+	"author": "xie392",
+	"manifest_version": 3,
+	"version": "1.0.0",
+	"description": "由于谷歌翻译退出中国，翻译小组手应运而生",
+	"icons": {
+	  "16": "img/icon.png",
+	  "48": "img/icon.png",
+	  "128": "img/icon.png"
 	},
-	"browser_action": 
-	{
-		"default_icon": "icon.png",
-		"default_popup": "popup.html"
+	"action": {
+	  "default_popup": "popup.html",
+	  "default_title": "翻译小组手",
+	  "default_icon": {
+		"16": "img/icon.png",
+		"48": "img/icon.png",
+		"128": "img/icon.png"
+	  }
+	},
+	"host_permissions": [
+	  "http://*/",
+	  "https://*/"
+	],
+	"permissions": [
+	  "contextMenus",
+	  "tabs",
+	  "webRequest",
+	  "storage",
+	  "notifications",
+	  "activeTab"
+	],
+	"background": {
+	  "service_worker": "js/background.js"
 	},
 	"content_scripts": 
 	[
 		{
-			"matches": ["https://www.baidu.com/*"],
-			"js": ["content-script.js"]
-		}
-	],
-	"web_accessible_resources": 
-	[
-		"inject.js"
+			"matches": [
+			  "<all_urls>"
+			],
+			"js": [
+				"js/popup.js"
+			],
+			"css": [
+			]
+		  }
 	]
 }
