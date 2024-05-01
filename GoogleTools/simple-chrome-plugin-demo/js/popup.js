@@ -1,8 +1,10 @@
-﻿let importBtn = document.getElementById("import_excal");
-let resetBtn = document.getElementById("reset_page");
+﻿let importBtn = document.getElementById("importExcal");
+let resetBtn = document.getElementById("resetPage");
+let importFile = document.getElementById("importFile");
 
 importBtn.addEventListener('click', () => {
   console.log('导入');
+  importFile.click();
 })
 
 resetBtn.addEventListener('click', () => {

@@ -4,10 +4,15 @@
 	<meta charset="utf-8"/>
 	<title>popup</title>
 </head>
-<body style="width:500px;min-height:100px;">
+<body style="width:500px;min-height:100px;padding: 10px;">
+	
 	<div class="button_box">
-		<div id="importExcal" class="middle_button">导入Excal</div>
+		<div id="importExcal" class="middle_button">
+			<input type="file" class="import_file" id="importFile" accept=".xlsx,.xls">
+			导入Excal
+		</div>
 		<div id="resetPage" class="middle_button">清空</div>
+		<p id="errorText"></p>
 	</div>
 	<div class="content_box">
 		<textarea name="xx" id="xxx" cols="30" rows="10"></textarea>
