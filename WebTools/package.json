@@ -15,7 +15,6 @@
     "@vueup/vue-quill": "^1.2.0",
     "axios": "^1.6.8",
     "element-plus": "^2.7.2",
-    "pinia": "^2.1.7",
     "vue": "^3.4.21",
     "xlsx": "^0.18.5"
   },
