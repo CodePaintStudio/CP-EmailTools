@@ -185,7 +185,7 @@ const sendEmails = async () => {
 * {
   box-sizing: border-box;
   font-family: 'KaiTi';
-  transition: all 0.3s;
+  transition: all 0.5s ease-in-out;
   text-decoration: none;
 }
 
@@ -211,10 +211,6 @@ const sendEmails = async () => {
     font-size: 40px;
     font-weight: 900;
     margin-bottom: 0;
-
-    &:hover {
-      transform: scale(1.02);
-    }
   }
 
   p {
@@ -263,7 +259,7 @@ const sendEmails = async () => {
         rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
         rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
         rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-      transform: scale(1.02);
+      transform: scale(1.01);
     }
   }
 
@@ -282,7 +278,7 @@ const sendEmails = async () => {
         rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
         rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
         rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-      transform: scale(1.02);
+      transform: scale(1.01);
     }
     .state_bt {
       width: 100%;
@@ -307,12 +303,12 @@ const sendEmails = async () => {
     rgba(0, 0, 0, 0.4) 0px 2px 4px,
     rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
     rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  transition: all 0.3s ease-in-out;
   &:hover {
     box-shadow:
       rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
       rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
       rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-    transform: scale(1.02);
   }
 }
 .upload_bt,
@@ -326,7 +322,6 @@ const sendEmails = async () => {
       rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
       rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
       rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-    transform: scale(1.02);
   }
 }
 </style>
