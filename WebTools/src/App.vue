@@ -37,8 +37,37 @@ const columns = computed(() => {
 const deleteRow = (index) => {
   excelData.value.splice(index, 1)
 }
-const sendEmails = () => {
-  console.log(emailContent.value)
+const sendEmails = async () => {
+  if (excelData.value.length === 0) {
+    return
+  }
+  // 由于邮箱服务不可用，这里模拟一下
+  for (let i = 0; i < excelData.value.length; i++) {
+    const email =
+      excelData.value[i].邮箱 ||
+      excelData.value[i].email ||
+      excelData.value[i].Email
+    try {
+      // 使用setTimeout来模拟异步操作
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const isSuccess = Math.random() > 0.3 // 根据随机数决定成功或失败
+          if (isSuccess) {
+            // 如果发送成功
+            excelData.value[i].state = 2 // 更新状态为发送成功
+            console.log(`给 ${email} 的邮件发送成功`)
+            resolve()
+          } else {
+            // 如果发送失败
+            excelData.value[i].state = 0 // 更新状态为失败
+            reject(new Error(`给 ${email} 的邮件发送失败`))
+          }
+        }, 1000) // 假设每封邮件发送需要1秒的时间
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
 </script>
 <template>
@@ -200,15 +229,18 @@ const sendEmails = () => {
     margin-top: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     border: 2px solid rgb(52, 137, 235);
+
     .state_bt {
       width: 100%;
       height: 100%;
     }
   }
+
   :deep(.el-table thead) {
     color: rgb(52, 137, 235);
   }
 }
+
 .send_bt {
   width: 100%;
   height: 50px;
