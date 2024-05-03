@@ -3,11 +3,11 @@ import { ref, computed } from 'vue'
 import * as XLSX from 'xlsx'
 import { Delete } from '@element-plus/icons-vue'
 
-const upload = ref(null)
-const excelData = ref([])
-const emailContent = ref('')
-const loading = ref(false)
-const dialogVisible = ref(false)
+const upload = ref(null) // 上传组件实例
+const excelData = ref([]) // Excel数据
+const emailContent = ref('') // 邮件内容
+const loading = ref(false) // 加载状态
+const dialogVisible = ref(false) // 对话框显示状态
 
 // 导入Excel数据
 const FileChange = (file) => {
@@ -202,7 +202,7 @@ const sendEmails = async () => {
         <template #default="scope">
           <el-button
             type="danger"
-            size="small"
+            size="normal"
             circle
             :icon="Delete"
             plain
@@ -243,7 +243,7 @@ const sendEmails = async () => {
 * {
   box-sizing: border-box;
   font-family: 'KaiTi';
-  transition: all 0.5s ease-in-out;
+  transition: all 0.4s;
   text-decoration: none;
   margin: 0;
   padding: 0;
@@ -340,6 +340,7 @@ const sendEmails = async () => {
       transform: scale(1.01);
     }
     .state_bt {
+      padding: 9px;
       width: 100%;
       height: 100%;
     }
