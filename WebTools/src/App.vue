@@ -84,9 +84,13 @@ const sendEmails = async () => {
         accept=".xlsx, .xls"
         :on-change="FileChange"
       >
-        <el-button type="primary">上传Excel</el-button>
+        <el-button type="primary" class="upload_bt">上传Excel</el-button>
       </el-upload>
-      <el-button style="margin-left: 10px" type="danger" @click="deleteData"
+      <el-button
+        class="delete_bt"
+        style="margin-left: 10px"
+        type="danger"
+        @click="deleteData"
         >清空</el-button
       >
     </div>
@@ -164,20 +168,25 @@ const sendEmails = async () => {
       </template>
     </el-table>
 
-    <el-button
-      type="primary"
-      plain
-      size="large"
-      class="send_bt"
-      @click="sendEmails"
+    <el-button type="primary" size="large" class="send_bt" @click="sendEmails"
       >一键发送</el-button
     >
+    <div class="footer" style="margin-top: 10px; margin-bottom: 0px">
+      <p>
+        Copyright © 2024 EmailTools.Designed by
+        <a href="https://github.com/CodePaintStudio/CP-EmailTools/"
+          >CodePaint</a
+        >
+      </p>
+    </div>
   </div>
 </template>
 <style scoped lang="scss">
 * {
   box-sizing: border-box;
   font-family: 'KaiTi';
+  transition: all 0.3s;
+  text-decoration: none;
 }
 
 .banner {
@@ -190,21 +199,44 @@ const sendEmails = async () => {
   margin: 0 auto;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+    rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: 2px solid rgb(52, 137, 235);
 
   h1 {
     color: rgb(52, 137, 235);
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    font-size: 30px;
-    display: block;
+    text-shadow: -2px -2px #444;
+    font-size: 40px;
+    font-weight: 900;
     margin-bottom: 0;
+
+    &:hover {
+      transform: scale(1.02);
+    }
   }
 
-  span {
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  p {
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     font-size: 14px;
     color: #999;
+
+    a,
+    span {
+      color: #999;
+      &:hover {
+        color: rgb(52, 137, 235);
+        text-decoration: underline;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        font-weight: 900;
+        font-size: 16px;
+      }
+    }
+    span {
+      text-decoration: none !important;
+      font-size: 14px !important;
+    }
   }
 
   .main {
@@ -219,17 +251,39 @@ const sendEmails = async () => {
     margin: 10px;
     border: 2px solid rgb(52, 137, 235);
     border-radius: 15px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow:
+      rgba(0, 0, 0, 0.4) 0px 2px 4px,
+      rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+      rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
     overflow: hidden;
+
+    &:hover {
+      box-shadow:
+        rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+        rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+        rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+      transform: scale(1.02);
+    }
   }
 
   .table {
     border-radius: 15px;
     width: 100%;
     margin-top: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow:
+      rgba(0, 0, 0, 0.4) 0px 2px 4px,
+      rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+      rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
     border: 2px solid rgb(52, 137, 235);
 
+    &:hover {
+      box-shadow:
+        rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+        rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+        rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+      transform: scale(1.02);
+    }
     .state_bt {
       width: 100%;
       height: 100%;
@@ -246,9 +300,33 @@ const sendEmails = async () => {
   height: 50px;
   margin-top: 20px;
   border-radius: 15px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   border: 2px solid rgb(52, 137, 235);
   font-size: 20px;
   font-weight: bold;
+  box-shadow:
+    rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+    rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  &:hover {
+    box-shadow:
+      rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+      rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+      rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    transform: scale(1.02);
+  }
+}
+.upload_bt,
+.delete_bt {
+  box-shadow:
+    rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+    rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  &:hover {
+    box-shadow:
+      rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+      rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+      rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    transform: scale(1.02);
+  }
 }
 </style>
