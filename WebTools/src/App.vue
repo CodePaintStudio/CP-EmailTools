@@ -107,7 +107,7 @@ const sendEmails = async () => {
 <template>
   <div class="banner">
     <!-- 头部 -->
-    <h1>EmailTools</h1>
+    <h1>CP-EmailTools</h1>
     <p>
       Excel转邮件群发工具 | <span>请务必将Excel表格第一列设置为邮箱地址</span>
     </p>
@@ -276,7 +276,7 @@ const sendEmails = async () => {
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     font-size: 14px;
     color: #999;
-    margin-top: 10px;
+    margin: 10px 0;
     a,
     span {
       color: rgb(52, 137, 235);
