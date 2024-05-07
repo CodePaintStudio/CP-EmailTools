@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import './style/index.scss'
 
 import App from './App.vue'
 import { QuillEditor } from '@vueup/vue-quill'
