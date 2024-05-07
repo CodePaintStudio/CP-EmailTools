@@ -10,6 +10,12 @@ const emailContent = ref('') // 邮件内容
 const loading = ref(false) // 加载状态
 const dialogVisible = ref(false) // 对话框显示状态
 const sendProcess = ref(0)
+const emailData = ref({
+  email: '',
+  password: ''
+})
+const isDrawer = ref(true)
+const isLogin = ref(false)
 // 导入Excel数据
 const FileChange = (file) => {
   loading.value = true
@@ -107,6 +113,35 @@ const sendEmails = async () => {
   isClick.value = false
   ElMessage.success('邮件发送完成')
 }
+// 校验规则
+const rules = {
+  email: [
+    { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+    {
+      type: 'email',
+      message: '请输入正确的邮箱地址',
+      trigger: ['blur', 'change']
+    }
+  ],
+  password: [
+    { required: true, message: '请输入邮箱授权码', trigger: 'blur' },
+    { min: 6, message: '授权码至少为6个字符', trigger: 'blur' },
+    { max: 16, message: '授权码不能超过16个字符', trigger: 'blur' }
+  ]
+}
+// 关闭抽屉前验证
+const checkEmail = () => {
+  const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailReg.test(emailData.value.email) || emailData.value.email === '') {
+    ElMessage.error('请输入正确的邮箱地址')
+    return false
+  }
+  if (emailData.value.password === '') {
+    ElMessage.error('请输入邮箱授权码')
+    return false
+  }
+  isDrawer.value = false
+}
 </script>
 <template>
   <div class="box">
@@ -142,7 +177,69 @@ const sendEmails = async () => {
           @click="deleteData"
           >清空</el-button
         >
+        <el-button
+          v-if="!isLogin"
+          class="delete_bt"
+          style="margin-left: 10px"
+          type="danger"
+          @click="isDrawer = true"
+          >未登录</el-button
+        >
+        <el-button
+          v-else
+          class="delete_bt"
+          style="margin-left: 10px"
+          type="success"
+          @click="isDrawer = true"
+          >已登录</el-button
+        >
       </div>
+      <!-- 登录 -->
+      <el-drawer
+        direction="ttb"
+        v-model="isDrawer"
+        size="30%"
+        title="请输入邮箱地址和密码："
+        :before-close="checkEmail"
+        :show-close="false"
+      >
+        <div class="login">
+          <el-form
+            class="el-form"
+            :model="emailData"
+            label-width="auto"
+            :rules="rules"
+          >
+            <el-form-item prop="email" label="邮箱地址:" class="el-form-item">
+              <el-input
+                v-model="emailData.email"
+                autocomplete="off"
+                placeholder="请输入邮箱地址"
+              ></el-input>
+            </el-form-item>
+            <el-form-item
+              prop="password"
+              label="邮箱授权码:"
+              class="el-form-item"
+            >
+              <el-input
+                type="password"
+                v-model="emailData.password"
+                placeholder="请输入邮箱授权码"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+          <div class="bt">
+            <el-button type="primary" @click="checkEmail" class="inner_bt"
+              >确认</el-button
+            >
+            <el-button type="danger" @click="isDrawer = false" class="inner_bt"
+              >关闭</el-button
+            >
+          </div>
+        </div>
+      </el-drawer>
       <!-- 编辑和预览 -->
       <div class="show">
         <QuillEditor

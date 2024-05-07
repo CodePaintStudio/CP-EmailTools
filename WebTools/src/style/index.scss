@@ -128,7 +128,8 @@ $box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
 }
 
 .upload_bt,
-.delete_bt {
+.delete_bt,
+.inner_bt {
     padding: 10px;
     box-shadow: $box-shadow;
 
@@ -140,4 +141,65 @@ $box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
 
 .fixed {
     margin-bottom: 0;
+}
+
+.p_text {
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(52, 137, 235);
+    margin-bottom: 20px;
+}
+
+.login {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .el-form {
+        width: 50%;
+        margin: 0 auto;
+
+        .el-input__wrapper {
+            border-radius: 10px !important;
+            overflow: hidden;
+        }
+    }
+
+    .bt {
+        width: 50%;
+        display: flex;
+        justify-content: space-around;
+
+        .inner_bt {
+            width: 40%;
+        }
+    }
+}
+
+.el-drawer {
+    user-select: none;
+    width: 60% !important;
+    min-width: 700px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: $box-shadow;
+    border: 2px solid rgb(52, 137, 235);
+
+    &:hover {
+        box-shadow: $box-hover-shadow;
+        border-radius: 25px;
+    }
+}
+
+.el-drawer__title {
+    font-weight: 700;
+    font-size: 20px !important;
+    color: rgb(52, 137, 235);
+}
+
+.el-form-item__label {
+    font-weight: 700;
+    color: rgb(52, 137, 235) !important;
 }
