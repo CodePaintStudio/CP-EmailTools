@@ -9,7 +9,7 @@ const excelData = ref([]) // Excel数据
 const emailContent = ref('') // 邮件内容
 const loading = ref(false) // 加载状态
 const dialogVisible = ref(false) // 对话框显示状态
-
+const sendProcess = ref(0)
 // 导入Excel数据
 const FileChange = (file) => {
   loading.value = true
@@ -79,6 +79,7 @@ const sendEmails = async () => {
   isClick.value = true
   // 由于邮箱服务不可用，这里模拟一下
   for (let i = 0; i < excelData.value.length; i++) {
+    sendProcess.value = (i / excelData.value.length) * 100
     const data = excelData.value[i] // data 是一个完整的对象
     const keys = Object.keys(data) // 获取对象中所有键，返回一个数组
     const email = data[keys[0]] // 获取第一个键对应的值，即邮箱地址
@@ -109,8 +110,8 @@ const sendEmails = async () => {
 </script>
 <template>
   <div class="box">
-    <el-affix :offset="0" v-show="isClick">
-      <el-progress :percentage="50" :show-text="false" />
+    <el-affix :offset="0">
+      <el-progress :percentage="sendProcess" :show-text="false" />
     </el-affix>
     <div class="banner">
       <!-- 头部 -->
