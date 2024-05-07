@@ -82,6 +82,14 @@ const sendEmails = async () => {
     ElMessage.warning('请先导入Excel数据')
     return
   }
+  if (isLogin.value === false) {
+    ElMessage.warning('请先登录邮箱')
+    return
+  }
+  if (emailContent.value === '') {
+    ElMessage.warning('请先输入邮件内容')
+    return
+  }
   isClick.value = true
   // 由于邮箱服务不可用，这里模拟一下
   for (let i = 0; i < excelData.value.length; i++) {
@@ -140,6 +148,7 @@ const checkEmail = () => {
     ElMessage.error('请输入邮箱授权码')
     return false
   }
+  isLogin.value = true
   isDrawer.value = false
 }
 </script>
@@ -199,7 +208,7 @@ const checkEmail = () => {
         direction="ttb"
         v-model="isDrawer"
         size="30%"
-        title="请输入邮箱地址和密码："
+        title="请输入邮箱地址和授权码："
         :before-close="checkEmail"
         :show-close="false"
       >
@@ -256,12 +265,7 @@ const checkEmail = () => {
         :data="excelData"
         height="500"
       >
-        <el-dialog
-          v-model="dialogVisible"
-          width="500"
-          :before-close="handleClose"
-        >
-        </el-dialog>
+        <el-dialog v-model="dialogVisible" width="500"> </el-dialog>
         <el-table-column label="状态" width="80" v-if="excelData.length > 0">
           <template v-slot:default="scope">
             <div>
