@@ -79,7 +79,7 @@ const sendEmails = async () => {
   isClick.value = true
   // 由于邮箱服务不可用，这里模拟一下
   for (let i = 0; i < excelData.value.length; i++) {
-    sendProcess.value = (i / excelData.value.length) * 100
+    sendProcess.value = ((i + 1) / excelData.value.length) * 100
     const data = excelData.value[i] // data 是一个完整的对象
     const keys = Object.keys(data) // 获取对象中所有键，返回一个数组
     const email = data[keys[0]] // 获取第一个键对应的值，即邮箱地址
@@ -98,7 +98,7 @@ const sendEmails = async () => {
             excelData.value[i].state = 0 // 更新状态为失败
             reject(new Error(`给 ${email} 的邮件发送失败`))
           }
-        }, 1000) // 假设每封邮件发送需要1秒的时间
+        }, 500) // 假设每封邮件发送需要1秒的时间
       })
     } catch (error) {
       console.error(error)
@@ -110,8 +110,13 @@ const sendEmails = async () => {
 </script>
 <template>
   <div class="box">
-    <el-affix :offset="0">
-      <el-progress :percentage="sendProcess" :show-text="false" />
+    <!-- 进度条 -->
+    <el-affix :offset="0" class="fixed" v-show="isClick">
+      <el-progress
+        :percentage="sendProcess"
+        :show-text="false"
+        :stroke-width="4"
+      />
     </el-affix>
     <div class="banner">
       <!-- 头部 -->
@@ -273,7 +278,7 @@ const sendEmails = async () => {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
+  margin: 10px auto;
   padding: 20px;
   border-radius: 10px;
   box-shadow:
@@ -405,8 +410,7 @@ const sendEmails = async () => {
     border-radius: 10px;
   }
 }
-.el-progress--line {
-  margin-top: 0;
-  margin-bottom: 10px;
+.fixed {
+  margin-bottom: 0;
 }
 </style>
