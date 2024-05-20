@@ -101,11 +101,12 @@
         const content = document.querySelector('textarea')
         console.log(email.value, content.value);
         axios.post('http://127.0.0.1:4443/api/email/sendemail', {
-          email: '',
-          password: '',
-          subject: '',
-          receiverItemsArray: [[''],['']],
-          content: '',
+          email: '1828195688@qq.com',
+          //qqsekcksoyngledcic msalalyotwwlgacf
+          password: 'msalalyotwwlgacf',
+          subject: '主题',
+          receiverItemsArray: [['1828195688@qq.com', '张'],['flowerheap@163.com', '王']],
+          content: '${text}同学你好',
         });
         // Email.send({
         //     // SecureToken: "f2c646b5-4fd0-4208-bb1e-e6540d54a592",

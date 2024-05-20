@@ -10,6 +10,19 @@ const frozen = async (time) => {
   await setTimeout(() => {}, time)
 }
 
+/** 拼接两个数组后转为字符串 */
+const joinArrays = (arr1, arr2) => {
+  if (arr2.length) {
+    const newArr = [];
+    arr1.forEach((item, index) => {
+      newArr.push(arr1[index], arr2[index]);
+    });
+    return newArr.join('');
+  } else {
+    return arr1.join('');
+  }
+}
+
 /**
  * 执行队列
 */
@@ -172,20 +185,22 @@ const sendEmails = async (req, res) => {
     if (!smtpServer) {
       return;
     }
-    emailList = receiverItemsArray.map(item => {
+    const contentArray = content.split('${text}');
+    emailList = receiverItemsArray.map(items => {
+      const newContent = joinArrays(contentArray, items.slice(1));
       const message = {
         from: `<${email}>`, // sender address
-        to: item[0], // list of receivers
+        to: items[0], // list of receivers
         subject: subject, // Subject line
-        text: content, // plain text body
-        html: content, // html body
+        text: newContent, // plain text body
+        html: newContent, // html body
       };
       console.log(message);
       //return 一个promise对象
       return smtpServer.sendMail(message);
     });
     const messages = await Promise.all(emailList);
-    console.log('messages', messages);
+    // console.log('messages', messages);
     sendRes(
       res,
       RES_CODE.SUCCESS,
