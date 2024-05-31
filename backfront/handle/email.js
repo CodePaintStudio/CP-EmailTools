@@ -1,13 +1,23 @@
-const nodemailer = require('nodemailer');
-const { sendRes, RES_CODE } = require('./errorHandle')
+//此文件实现发送邮箱业务
+const { sendRes, RES_CODE } = require('./errorHandle');
+const { createSmtpServer, sendMail } = require('./nodemailerHandle')
 /**
  * SMTP服务请求队列： 先来先服务
 */
 const smtpServerQueue = [];
 
-//TODO: 因为是请求队列，这个函数其实不需要
+//因为是请求队列，这个函数其实不需要，如果后续有限制发送间隔可以用此方案
 const frozen = async (time) => {
   await setTimeout(() => {}, time)
+}
+
+/** 去除数组中所有假值 */
+const compactArr = (arr) => {
+  const newArr = [];
+  arr.forEach((item) => {
+    if(item) newArr.push(item);
+  });
+  return newArr;
 }
 
 /** 拼接两个数组后转为字符串 */
@@ -23,6 +33,7 @@ const joinArrays = (arr1, arr2) => {
   }
 }
 
+let running = false;
 /**
  * 执行队列
 */
@@ -32,11 +43,14 @@ const executeServerQueue = async (fun) => {
     smtpServerQueue.push(fun);
   }
   console.log(`调用执行队列，当前请求服务队列有${smtpServerQueue.length}个服务`, smtpServerQueue);
-  // 检查服务队列中是否有值，有值就执行剩余函数
-  if (smtpServerQueue.length) {
+  // 检查服务队列中是否有值，有值且当前没有函数在执行则执行剩余函数
+  if (smtpServerQueue.length && !running) {
+    running = true;
     console.log('执行！');
     await smtpServerQueue[0]();
-    await frozen(1000);
+    // 这里可以限制一下发送间隔
+    // await frozen(1000);
+    running = false;
     console.log('执行结束！');
     //等待函数执行完进行出队
     smtpServerQueue.shift();
@@ -46,6 +60,7 @@ const executeServerQueue = async (fun) => {
 
 /**
  * 预校验
+ * TODO： 需要校验长度是否合法
 */
 const preError = (req) => {
   const {
@@ -78,90 +93,10 @@ const preError = (req) => {
   return '';
 }
 
-/**
- * 根据域名匹配对应smtp服务器设置
-*/
-const selectSmtpConfig = (email) => {
-  // 取出域名
-  const realmName = email.split('@')[1];
-  // console.log('realmName', realmName)
-  switch (realmName) {
-    case '163.com': {
-      return {
-        host: 'smtp.163.com',
-        port: 465,
-      };
-    }
-    case 'qq.com': {
-      return {
-        host: 'smtp.qq.com',
-        port: 465,
-      };
-    }
-    // case '163.com': {
-    //   return {
-    //     host: '',
-    //     port: 465,
-    //   };
-    // }
-    default: {
-      return false;
-    }
-  }
-}
-
-/**
- * 开启smtp服务
-*/
-const createSmtpServer = async (email, password, res) => {
-  const smtpConfig = selectSmtpConfig(email);
-  try {
-    const smtpServer = await nodemailer.createTransport({
-      ...smtpConfig,
-      // host: 'smtp.163.com',
-      // port: 465,
-      auth: {
-        user: email,
-        pass: password,
-      },
-    }); 
-    console.log('VERIFY前');
-    const verifyRes = await new Promise((req, res) => {
-      smtpServer.verify(function (error, success) {
-        if (error) {
-          // console.log(error);
-          console.log('请检查账号密码是否正确！');
-          smtpServer.close();
-          req('请检查账号密码是否正确！')
-        } else {
-          console.log("Server is ready to take our messages");
-          req('');
-        }
-      });
-    })
-    console.log('VERIFY后', verifyRes);  
-    if (verifyRes) {
-      sendRes(
-        res,
-        RES_CODE.ACCOUNT_OR_PASSWORD_ERROR,
-        {
-          msg: verifyRes,
-        }
-      )
-      return false;
-    } else {
-      return smtpServer;
-    }
-  } catch (error) {
-    console.log('verify过程出错了', error);
-  }
-}
-
 /** 
  * 批量发送邮件
 */
 const sendEmails = async (req, res) => {
-  // console.log('req', req.body);
   if (preError(req.body)) {
     sendRes(
       res,
@@ -179,43 +114,46 @@ const sendEmails = async (req, res) => {
     receiverItemsArray,
     content,
   } = req.body;
-  let smtpServer, emailList;
-  try {
-    smtpServer = await createSmtpServer(email, password, res);
-    if (!smtpServer) {
-      return;
-    }
-    const contentArray = content.split('${text}');
-    emailList = receiverItemsArray.map(items => {
-      const newContent = joinArrays(contentArray, items.slice(1));
-      const message = {
-        from: `<${email}>`, // sender address
-        to: items[0], // list of receivers
-        subject: subject, // Subject line
-        text: newContent, // plain text body
-        html: newContent, // html body
-      };
-      console.log(message);
-      //return 一个promise对象
-      return smtpServer.sendMail(message);
-    });
-    const messages = await Promise.all(emailList);
-    // console.log('messages', messages);
+  const smtpServerObj = await createSmtpServer(email, password);
+  //没创建成功直接返回前端信息并退出
+  if (!smtpServerObj.success) {
     sendRes(
       res,
-      RES_CODE.SUCCESS,
-      messages
-    );
-    //关闭smtp服务 TODO: check
-    await new Promise(async (res) => {
-      await smtpServer.close();
-      res('');
-    })
-    console.log('服务关闭');
-  } catch (error) {
-    console.log('出错啦', error);
+      RES_CODE.ACCOUNT_OR_PASSWORD_ERROR,
+      {
+        msg: smtpServerObj.info,
+      }
+    )
     return;
   }
+  const smtpServer = smtpServerObj.smtpServer;
+  const contentArray = content.split('${text}');
+  const emailList = receiverItemsArray.map(items => {
+    const newContent = joinArrays(contentArray, items.slice(1));
+    const message = {
+      from: `<${email}>`, // sender address
+      to: items[0], // list of receivers
+      subject: subject, // Subject line
+      text: newContent, // plain text body
+      html: newContent, // html body
+    };
+    console.log(message);
+    return sendMail(message, smtpServer);
+  });
+  const messages = compactArr(await Promise.all(emailList));
+  sendRes(
+    res,
+    RES_CODE.SUCCESS,
+    {
+      successList: messages,
+    }
+  );
+  //关闭smtp服务 TODO: check
+  await new Promise(async (res) => {
+    await smtpServer.close();
+    res('');
+  })
+  console.log('服务关闭');
 }
 
 module.exports = {

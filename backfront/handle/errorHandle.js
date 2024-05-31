@@ -1,6 +1,8 @@
+//此文件实现信息返回前端业务
+
 /**
  * 返回前端信息
- * res 是repress回调 code 是状态码 data是返回信息
+ * res 是express回调 code 是状态码 data是返回信息
  */
 const sendRes = (res, code, data) => {
   if (res) {
