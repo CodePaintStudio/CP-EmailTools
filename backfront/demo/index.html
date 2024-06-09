@@ -88,7 +88,8 @@
 
 <body>
     <div class="box">
-        <input type="text" placeholder="输入邮箱地址">
+        <input type="text" placeholder="输入邮箱地址" id="email">
+        <input type="password" placeholder="输入邮箱密码" id="password">
         <textarea id="content" placeholder="输入邮箱内容...">
         </textarea>
         <button>发送</button>
@@ -96,17 +97,18 @@
 </body>
 <script src="./axios.min.js"></script>
 <script>
+    const content = document.querySelector('textarea')
+    const email = document.getElementById('email')
+    const password = document.getElementById('password')
     function sendEmail() {
-        const email = document.querySelector('input');
-        const content = document.querySelector('textarea')
-        console.log(email.value, content.value);
+        console.log(email.value, password.value, content.value);
         axios.post('http://127.0.0.1:4443/api/email/sendemail', {
-          email: '',
-          password: '',
-          subject: '主题',
-          receiverItemsArray: [['1828195688@qq.com', '张'],['flowerheap@163.com', '王']],
-          content: '${text}同学你好',
-        });
+            email: email.value,
+            password: password.value,
+            subject: '主题',
+            receiverItemsArray: [['minor6789@outlook.com', '邓']],
+            content: content.value,
+        })
         // Email.send({
         //     // SecureToken: "f2c646b5-4fd0-4208-bb1e-e6540d54a592",
         //     Host: 'stmp.exmail.qq.com',
@@ -124,7 +126,7 @@
         //     }
         // );
     }
-    const btn = document.querySelector('button');
+    const btn = document.querySelector('button')
     btn.addEventListener('click', sendEmail)
 </script>
 

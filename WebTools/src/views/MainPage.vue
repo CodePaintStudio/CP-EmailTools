@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import * as XLSX from 'xlsx'
 import { Delete } from '@element-plus/icons-vue'
+import { sendEmailServeice } from '@/api/postEmail'
 
 //
 const isClick = ref(false)
@@ -17,6 +18,7 @@ const emailData = ref({
 })
 const isDrawer = ref(true)
 const isLogin = ref(false)
+const receiverItemsArray = ref([])
 
 const columns = computed(() => {
   const cols = new Set()
@@ -119,28 +121,17 @@ const sendEmails = async () => {
     const data = excelData.value[i] // data 是一个完整的对象
     const keys = Object.keys(data) // 获取对象中所有键，返回一个数组
     const email = data[keys[0]] // 获取第一个键对应的值，即邮箱地址
-    try {
-      // 使用setTimeout来模拟异步操作
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          console.log(excelData)
-          const isSuccess = Math.random() > 0.3 // 根据随机数决定成功或失败
-          if (isSuccess) {
-            // 如果发送成功
-            excelData.value[i].state = 2 // 更新状态为发送成功
-            console.log(`给 ${email} 的邮件发送成功`)
-            resolve()
-          } else {
-            // 如果发送失败
-            excelData.value[i].state = 0 // 更新状态为失败
-            reject(new Error(`给 ${email} 的邮件发送失败`))
-          }
-        }, 500) // 假设每封邮件发送需要1秒的时间
-      })
-    } catch (error) {
-      console.error(error)
-    }
+    const Item = Array(email, new Date().toLocaleString())
+    receiverItemsArray.value.push(Item)
   }
+  await sendEmailServeice({
+    email: emailData.value.email,
+    password: emailData.value.password,
+    subject: '测试邮件',
+    receiverItemsArray: receiverItemsArray.value,
+    content: emailContent.value
+  })
+  receiverItemsArray.value = []
   isClick.value = false
   ElMessage.success('邮件发送完成')
 }
