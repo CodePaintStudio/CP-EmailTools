@@ -15,6 +15,25 @@ $box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
 
 }
 
+body {
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    width: 100% !important;
+}
+
+body::-webkit-scrollbar {
+    width: 0 !important;
+}
+
+body {
+    -ms-overflow-style: none;
+}
+
+body {
+    overflow: -moz-scrollbars-none;
+}
+
 .box {
     width: 100%;
     height: 100%;
@@ -72,6 +91,8 @@ $box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
         display: flex;
         justify-content: start;
     }
+
+
 
     .show {
         width: 100%;
@@ -205,7 +226,9 @@ $box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
     font-weight: 700;
     color: rgb(52, 137, 235) !important;
 }
-.ql-editor  {    
+
+.ql-editor {
+
     h1,
     h2,
     h3 {
@@ -217,5 +240,28 @@ $box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
     p {
         font-weight: normal;
         color: black;
+    }
+}
+
+.subject {
+    width: 100% !important;
+    height: 5vh !important;
+    margin-top: 10px;
+    border: 2px solid rgb(52, 137, 235);
+    border-radius: 20px;
+    box-shadow: $box-shadow;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+
+    &:hover {
+        box-shadow: $box-hover-shadow;
+        border-radius: 25px !important;
+    }
+
+    .el-input__inner {
+        border: none;
+        height: 100%;
+        border-radius: 25px;
+        padding-left: 2vw;
     }
 }
