@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import * as XLSX from 'xlsx'
 import { Delete } from '@element-plus/icons-vue'
-import { sendEmailServeice } from '@/api/postEmail'
+import { sendEmailService } from '@/api/postEmail'
 
 //
 const isClick = ref(false)
@@ -19,6 +19,8 @@ const emailData = ref({
 const isDrawer = ref(true)
 const isLogin = ref(false)
 const receiverItemsArray = ref([])
+const subject = ref('')
+const acceptedEmail = ref()
 
 const columns = computed(() => {
   const cols = new Set()
@@ -69,19 +71,19 @@ const FileChange = (file) => {
 
 // 清空数据
 const deleteData = () => {
-  if (excelData.value.length === 0) {
-    ElMessage({
-      message: '请先导入数据再清空',
-      grouping: true,
-      type: 'warning'
-    })
-    emailContent.value = ''
-    return
-  }
   loading.value = true
   setTimeout(() => {
     excelData.value = []
     emailContent.value = ''
+    subject.value = ''
+    isLogin.value = false
+    emailData.value = {
+      email: '',
+      password: ''
+    }
+    receiverItemsArray.value = []
+    isClick.value = false
+    sendProcess.value = 0
     loading.value = false
     ElMessage.success('数据已清空')
   }, 500)
@@ -100,22 +102,42 @@ const deleteRow = (index) => {
     })
 }
 
-// 邮件发送服务
-const sendEmails = async () => {
+// 发送前的校验
+const checkBeforeSend = () => {
   if (excelData.value.length === 0) {
     ElMessage.warning('请先导入Excel数据')
-    return
-  }
-  if (isLogin.value === false) {
-    ElMessage.warning('请先登录邮箱')
-    return
+    return false
   }
   if (emailContent.value === '') {
     ElMessage.warning('请先输入邮件内容')
-    return
+    return false
   }
+  if (subject.value === '') {
+    ElMessage.warning('请先输入邮件主题')
+    return false
+  }
+  return true
+}
+
+// 更新发送状态
+const updateState = () => {
+  // 初始化所有状态为 -1
+  excelData.value.forEach((row) => {
+    row.state = -1
+  })
+  // 更新匹配的邮箱状态为 2
+  excelData.value.forEach((data) => {
+    const email = data.email // 直接使用键名获取邮箱地址
+    if (acceptedEmail.value.includes(email)) {
+      data.state = 2
+    }
+  })
+}
+
+// 邮件发送服务
+const sendEmails = async () => {
+  if (!checkBeforeSend()) return
   isClick.value = true
-  // 由于邮箱服务不可用，这里模拟一下
   for (let i = 0; i < excelData.value.length; i++) {
     sendProcess.value = ((i + 1) / excelData.value.length) * 100
     const data = excelData.value[i] // data 是一个完整的对象
@@ -124,16 +146,21 @@ const sendEmails = async () => {
     const Item = Array(email, new Date().toLocaleString())
     receiverItemsArray.value.push(Item)
   }
-  await sendEmailServeice({
-    email: emailData.value.email,
-    password: emailData.value.password,
-    subject: '测试邮件',
-    receiverItemsArray: receiverItemsArray.value,
-    content: emailContent.value
-  })
-  receiverItemsArray.value = []
-  isClick.value = false
-  ElMessage.success('邮件发送完成')
+  try {
+    const res = await sendEmailService({
+      email: emailData.value.email,
+      password: emailData.value.password,
+      subject: subject.value,
+      receiverItemsArray: receiverItemsArray.value,
+      content: emailContent.value
+    })
+    acceptedEmail.value = res.data.data[0].accepted
+    updateState()
+    ElMessage.success('邮件发送完成')
+  } finally {
+    receiverItemsArray.value = []
+    isClick.value = false
+  }
 }
 
 // 关闭抽屉前验证
@@ -183,7 +210,7 @@ const checkEmail = () => {
           style="margin-left: 10px"
           type="danger"
           @click="deleteData"
-          >清空</el-button
+          >清空数据</el-button
         >
         <el-button
           v-if="!isLogin"
@@ -248,12 +275,20 @@ const checkEmail = () => {
           </div>
         </div>
       </el-drawer>
+      <!-- 输入主题 -->
+      <el-input
+        class="subject"
+        v-model="subject"
+        style="width: 240px"
+        placeholder="请输入邮件主题"
+      />
       <!-- 编辑和预览 -->
       <div class="show">
         <QuillEditor
           theme="snow"
           v-model:content="emailContent"
           content-type="html"
+          placeholder="请输入邮件内容"
         />
       </div>
       <!-- 数据展示 -->
