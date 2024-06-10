@@ -21,6 +21,17 @@ body {
     overflow-y: scroll;
     width: 100% !important;
 }
+#el-id-3007-0::-webkit-scrollbar {
+    width: 0 !important;
+}
+
+#el-id-3007-0 {
+    -ms-overflow-style: none;
+}
+
+#el-id-3007-0 {
+    overflow: -moz-scrollbars-none;
+}
 
 body::-webkit-scrollbar {
     width: 0 !important;
