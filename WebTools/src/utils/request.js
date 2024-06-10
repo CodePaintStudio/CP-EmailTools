@@ -7,7 +7,7 @@ const instance = axios.create({
   baseURL
 })
 
-// 测试2
+// 设置一个响应拦截器，错误统一处理。
 instance.interceptors.response.use((res) => {
   if (res.data.code === 0) {
     return res
