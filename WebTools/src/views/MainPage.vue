@@ -139,7 +139,6 @@ const updateState = () => {
       excelData.value[i].state = 2
     }
   }
-  console.log(excelData.value)
   receiverItemsArray.value = []
 }
 // 邮件发送服务
