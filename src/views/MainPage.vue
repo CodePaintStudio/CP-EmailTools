@@ -5,6 +5,7 @@ import { Delete } from '@element-plus/icons-vue'
 import { sendEmailService } from '@/api/postEmail'
 import { useUserStore } from '@/stores/user'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import Tiptap from '@/components/Tiptap.vue'
 
 const UserStore = useUserStore()
 
@@ -225,7 +226,6 @@ const checkEmail = () => {
 // 登录按钮
 const Loginwaring = () => {
   if (UserStore.hasToken() === true) {
-    console.log(emailContent.value)
     ElMessage.warning('您已经登录，请勿重复登录')
     return
   }
@@ -362,12 +362,7 @@ const addNewRow = () => {
       />
       <!-- 编辑和预览 -->
       <div class="show">
-        <QuillEditor
-          theme="snow"
-          v-model:content="emailContent"
-          content-type="html"
-          placeholder="请输入邮件内容"
-        />
+        <Tiptap v-model="emailContent"></Tiptap>
       </div>
       <!-- 数据展示 -->
       <el-table
@@ -409,7 +404,7 @@ const addNewRow = () => {
           </template>
         </el-table-column>
         <el-table-column
-          v-for="key in columns"
+          v-for="key in columns.filter((col) => col !== 'state')"
           :key="key"
           :prop="key"
           :label="key"
