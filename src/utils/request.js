@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
-const baseURL = 'http://127.0.0.1:4443/api/email'
+const baseURL = 'http://127.0.0.1:4443/api'
 
 const instance = axios.create({
   baseURL

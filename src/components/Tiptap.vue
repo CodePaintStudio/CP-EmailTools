@@ -6,9 +6,11 @@ import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
 import { CharacterCount } from '@tiptap/extension-character-count'
 import StarterKit from '@tiptap/starter-kit'
+import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import SvgIcon from './Svglcon.vue'
+import { uploadPhotoService } from '@/api/postUpload'
 
 const props = defineProps({
   modelValue: {
@@ -44,6 +46,10 @@ onMounted(() => {
       }), // 添加链接扩展
       CharacterCount.configure({
         limit: 2000 // 可选：设置字数限制
+      }),
+      Image.configure({
+        inline: true, // 图片作为内联元素
+        allowBase64: false // 不允许 base64 图片
       })
     ],
     content: props.modelValue,
@@ -98,6 +104,41 @@ const confirmLink = () => {
   }
   linkDialogVisible.value = false
 }
+
+// 处理图片上传
+const handleImageUpload = async (options) => {
+  const { file } = options // 从 options 中解构出 file
+  if (!file) return
+
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const response = await uploadPhotoService(formData)
+    console.log('上传响应:', response) // 打印完整的响应
+
+    // 检查 response 的结构
+    if (
+      !response ||
+      !response.data ||
+      !response.data.data ||
+      !response.data.data.file
+    ) {
+      throw new Error('上传响应格式不正确')
+    }
+
+    const imageUrl = response.data.data.file
+    console.log('图片 URL:', imageUrl)
+
+    if (editor.value) {
+      editor.value.chain().focus().setImage({ src: imageUrl }).run()
+    } else {
+      console.error('编辑器未初始化')
+    }
+  } catch (error) {
+    console.error('图片上传失败:', error.message || error)
+  }
+}
 </script>
 
 <template>
@@ -108,7 +149,7 @@ const confirmLink = () => {
           <input
             type="color"
             @input="editor.chain().focus().setColor($event.target.value).run()"
-            :value="editor.getAttributes('textStyle').color"
+            :value="editor.getAttributes('textStyle').color || '#000000'"
           />
         </el-button>
         <el-tooltip content="加粗" placement="bottom">
@@ -226,6 +267,18 @@ const confirmLink = () => {
           >
             <SvgIcon name="underline" color="#000"></SvgIcon>
           </el-button>
+        </el-tooltip>
+        <el-tooltip content="图片上传" placement="bottom">
+          <el-upload
+            action="#"
+            :show-file-list="false"
+            :before-upload="handleImageUpload"
+            :http-request="handleImageUpload"
+          >
+            <el-button>
+              <SvgIcon name="image" color="#000"></SvgIcon>
+            </el-button>
+          </el-upload>
         </el-tooltip>
         <el-tooltip content="添加链接" placement="bottom">
           <el-button
