@@ -93,7 +93,7 @@ const importantNotes = ref([
     title: '技术支持',
     details: [
       '如有问题，请联系技术支持团队',
-      '邮箱:wujieruanchuang@163.com',
+      '邮箱:<a>wujieruanchuang@163.com</a>',
       'GitHub: <a href="https://github.com/CodePaintStudio/CP-EmailTools" target="_blank">CodePaintStudio/CP-EmailTools</a>'
     ]
   }
