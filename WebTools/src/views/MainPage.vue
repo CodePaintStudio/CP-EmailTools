@@ -3,9 +3,11 @@ import { ref, computed, onMounted } from 'vue'
 import * as XLSX from 'xlsx'
 import { Delete } from '@element-plus/icons-vue'
 import { sendEmailService } from '@/api/postEmail'
+import { getTemplateDownload } from '@/api/gettemplate'
 import { useUserStore } from '@/stores/user'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import Tiptap from '@/components/Tiptap.vue'
+import IntroDialog from '@/components/IntroDialog.vue'
 
 const UserStore = useUserStore()
 
@@ -247,9 +249,47 @@ const addNewRow = () => {
     ElMessage.warning('最多只能添加100行')
   }
 }
+// 控制弹窗显示
+const showIntro = ref(localStorage.getItem('hideIntro') !== 'true')
+
+// 显示提示
+const showTips = () => {
+  showIntro.value = true
+}
+
+// 下载模板
+const downloadTemplate = async () => {
+  try {
+    const response = await getTemplateDownload()
+
+    // 创建 Blob 对象
+    const blob = new Blob([response.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    })
+
+    // 触发下载
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      // 兼容 IE 和 Edge
+      window.navigator.msSaveOrOpenBlob(blob, 'template.xlsx')
+    } else {
+      // 兼容现代浏览器
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = 'template.xlsx' // 设置下载文件名
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    }
+  } catch (error) {
+    ElMessage.warning('下载失败，请稍后重试或联系管理员')
+  }
+}
 </script>
 <template>
   <div class="box">
+    <IntroDialog v-model="showIntro" />
     <!-- 进度条 -->
     <el-affix :offset="0" class="fixed" v-show="isClick">
       <el-progress
@@ -305,6 +345,21 @@ const addNewRow = () => {
           type="warning"
           @click="LoginOut"
           >退出登录</el-button
+        >
+        <el-button
+          @click="downloadTemplate"
+          class="delete_bt"
+          style="margin-left: 10px"
+          type="success"
+        >
+          下载模板
+        </el-button>
+        <el-button
+          @click="showTips"
+          class="delete_bt"
+          style="margin-left: 10px"
+          type="info"
+          >使用说明</el-button
         >
       </div>
       <!-- 登录 -->

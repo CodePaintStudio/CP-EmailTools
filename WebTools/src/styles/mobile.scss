@@ -1,0 +1,162 @@
+// 移动端适配
+@media (max-width: 768px) {
+  // 通用调整
+  .box {
+    padding: 10px;
+  }
+
+  // 横幅样式调整
+  .banner {
+    width: 100%;
+    min-width: unset;
+    padding: 10px;
+    margin: 5px auto;
+
+    h1 {
+      font-size: 28px;
+      text-shadow: -1px -1px #444;
+    }
+
+    p {
+      font-size: 12px;
+
+      a,
+      span {
+        font-size: 12px !important;
+
+        &:hover {
+          font-size: 14px !important;
+        }
+      }
+    }
+
+    .main {
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      .el-button {
+        height: 40px;
+        border-radius: 10px;
+      }
+    }
+
+    .show,
+    .table {
+      margin: 5px 0;
+      border-radius: 10px;
+
+      &:hover {
+        border-radius: 15px;
+      }
+    }
+
+    .show {
+      height: 300px;
+    }
+
+    .table {
+      margin-top: 10px;
+
+      .state_bt {
+        padding: 5px;
+      }
+    }
+  }
+
+  // 按钮样式调整
+  .upload_bt,
+  .delete_bt,
+  .inner_bt {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .send_bt {
+    height: 40px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  // 登录表单调整
+  .login {
+    .el-form {
+      width: 90%;
+    }
+
+    .bt {
+      width: 90%;
+
+      .inner_bt {
+        width: 45%;
+      }
+    }
+  }
+
+  // 抽屉样式调整
+  .el-drawer {
+    width: 90% !important;
+    min-width: unset;
+
+    .el-drawer__title {
+      font-size: 18px !important;
+    }
+  }
+
+  // 输入框样式调整
+  .subject {
+    height: 40px !important;
+
+    .el-input__inner {
+      padding-left: 10px;
+    }
+  }
+
+  // 操作区域调整
+  .operation {
+    flex-direction: column;
+    gap: 5px;
+
+    .el-button {
+      width: 100%;
+    }
+  }
+  .show {
+    width: 100%;
+    // 富文本编辑器调整
+    .ql-editor {
+      min-height: 70%;
+    }
+  }
+
+  // 隐藏不必要的阴影效果
+  .button-style,
+  .subject,
+  .banner .show,
+  .banner .table,
+  .el-drawer {
+    box-shadow: none;
+    &:hover {
+      box-shadow: none;
+    }
+  }
+  .table {
+    height: auto !important; // 取消固定高度
+    width: 100%;
+  }
+
+  .el-table-column {
+    min-width: 20px !important; // 列最小宽度
+  }
+
+  .operation {
+    flex-direction: row;
+  }
+
+  .state_bt,
+  .add-row-btn {
+    padding: 5px; // 按钮内边距
+    font-size: 12px; // 按钮字体大小
+  }
+}

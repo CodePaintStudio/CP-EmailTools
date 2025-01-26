@@ -16,9 +16,16 @@ const sendEmail = require('./router/emailServer')
 //注册邮箱路由
 server.use('/api/email', sendEmail)
 
+// 创建上传路由
 const uploadsRouter = require('./router/uploads')
+// 注册上传路由
 server.use('/api/uploads', uploadsRouter)
 
+
+// 创建下载模板路由
+const templateDownload = require('./router/templateDownload')
+// 注册下载模板路由
+server.use('/api/template', templateDownload)
 
 //启动服务
 server.listen(4443, function () {
