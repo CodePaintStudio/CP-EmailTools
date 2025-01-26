@@ -46,7 +46,7 @@
       border-radius: 10px;
 
       &:hover {
-        border-radius: 15px;
+        border-radius: 10px;
       }
     }
 
@@ -107,7 +107,7 @@
   // 输入框样式调整
   .subject {
     height: 40px !important;
-
+    border-radius: 10px;
     .el-input__inner {
       padding-left: 10px;
     }

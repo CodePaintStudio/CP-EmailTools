@@ -23,7 +23,7 @@ const emailData = ref({
   password: ''
 })
 const isLogin = ref(UserStore.hasToken())
-const isDrawer = ref(true)
+const isDrawer = ref(false) //默认首次不弹出
 const receiverItemsArray = ref([])
 const subject = ref('')
 const acceptedEmail = ref([])
@@ -292,18 +292,12 @@ const downloadTemplate = async () => {
     <IntroDialog v-model="showIntro" />
     <!-- 进度条 -->
     <el-affix :offset="0" class="fixed" v-show="isClick">
-      <el-progress
-        :percentage="sendProcess"
-        :show-text="false"
-        :stroke-width="4"
-      />
+      <el-progress :percentage="sendProcess" :show-text="false" :stroke-width="4" />
     </el-affix>
     <div class="banner">
       <!-- 头部 -->
       <h1>CP-EmailTools</h1>
-      <p>
-        Excel转邮件群发工具 | <span>请务必将Excel表格第一列设置为邮箱地址</span>
-      </p>
+      <p>Excel转邮件群发工具 | <span>请务必将Excel表格第一列设置为邮箱地址</span></p>
       <!-- 上传和清空 -->
       <div class="main">
         <el-upload
@@ -315,11 +309,7 @@ const downloadTemplate = async () => {
         >
           <el-button type="primary" class="upload_bt">上传Excel</el-button>
         </el-upload>
-        <el-button
-          class="delete_bt"
-          style="margin-left: 10px"
-          type="danger"
-          @click="deleteData"
+        <el-button class="delete_bt" style="margin-left: 10px" type="danger" @click="deleteData"
           >清空数据</el-button
         >
         <el-button
@@ -354,11 +344,7 @@ const downloadTemplate = async () => {
         >
           下载模板
         </el-button>
-        <el-button
-          @click="showTips"
-          class="delete_bt"
-          style="margin-left: 10px"
-          type="info"
+        <el-button @click="showTips" class="delete_bt" style="margin-left: 10px" type="info"
           >使用说明</el-button
         >
       </div>
@@ -372,12 +358,7 @@ const downloadTemplate = async () => {
         :show-close="false"
       >
         <div class="login">
-          <el-form
-            class="el-form"
-            :model="emailData"
-            label-width="auto"
-            :rules="rules"
-          >
+          <el-form class="el-form" :model="emailData" label-width="auto" :rules="rules">
             <el-form-item prop="email" label="邮箱地址:" class="el-form-item">
               <el-input
                 v-model="emailData.email"
@@ -385,11 +366,7 @@ const downloadTemplate = async () => {
                 placeholder="请输入邮箱地址"
               ></el-input>
             </el-form-item>
-            <el-form-item
-              prop="password"
-              label="邮箱授权码:"
-              class="el-form-item"
-            >
+            <el-form-item prop="password" label="邮箱授权码:" class="el-form-item">
               <el-input
                 type="password"
                 v-model="emailData.password"
@@ -399,12 +376,8 @@ const downloadTemplate = async () => {
             </el-form-item>
           </el-form>
           <div class="bt">
-            <el-button type="primary" @click="checkEmail" class="inner_bt"
-              >确认</el-button
-            >
-            <el-button type="danger" @click="isDrawer = false" class="inner_bt"
-              >关闭</el-button
-            >
+            <el-button type="primary" @click="checkEmail" class="inner_bt">确认</el-button>
+            <el-button type="danger" @click="isDrawer = false" class="inner_bt">关闭</el-button>
           </div>
         </div>
       </el-drawer>
@@ -420,13 +393,7 @@ const downloadTemplate = async () => {
         <Tiptap v-model="emailContent"></Tiptap>
       </div>
       <!-- 数据展示 -->
-      <el-table
-        class="table"
-        v-loading="loading"
-        border
-        :data="excelData"
-        height="500"
-      >
+      <el-table class="table" v-loading="loading" border :data="excelData" height="500">
         <el-dialog v-model="dialogVisible" width="500"> </el-dialog>
         <el-table-column label="状态" width="80" v-if="excelData.length > 0">
           <template v-slot:default="scope">
@@ -447,12 +414,7 @@ const downloadTemplate = async () => {
                 disabled
                 >未发送</el-button
               >
-              <el-button
-                v-else
-                type="success"
-                disabled
-                class="state_bt"
-                size="small"
+              <el-button v-else type="success" disabled class="state_bt" size="small"
                 >成功</el-button
               >
             </div>
@@ -469,12 +431,7 @@ const downloadTemplate = async () => {
             <el-input v-model="scope.row[key]"></el-input>
           </template>
         </el-table-column>
-        <el-table-column
-          fixed="right"
-          label="操作"
-          width="100"
-          v-if="excelData.length > 0"
-        >
+        <el-table-column fixed="right" label="操作" width="100" v-if="excelData.length > 0">
           <template #default="scope">
             <div class="operation">
               <el-button
@@ -486,12 +443,7 @@ const downloadTemplate = async () => {
                 @click.prevent="deleteRow(scope.$index)"
               >
               </el-button>
-              <el-button
-                type="primary"
-                size="normal"
-                circle
-                class="add-row-btn"
-                @click="addNewRow"
+              <el-button type="primary" size="normal" circle class="add-row-btn" @click="addNewRow"
                 >+</el-button
               >
             </div>
@@ -510,9 +462,7 @@ const downloadTemplate = async () => {
       <div class="footer" style="margin-top: 10px; margin-bottom: 0px">
         <p>
           Copyright © 2024 EmailTools.Designed by
-          <a href="https://github.com/CodePaintStudio/CP-EmailTools/"
-            >CodePaint</a
-          >
+          <a href="https://github.com/CodePaintStudio/CP-EmailTools/">CodePaint</a>
         </p>
       </div>
     </div>
