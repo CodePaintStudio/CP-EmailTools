@@ -94,7 +94,7 @@ const importantNotes = ref([
     details: [
       '如有问题，请联系技术支持团队',
       '邮箱:wujieruanchuang@163.com',
-      'GitHub:https://github.com/CodePaintStudio/CP-EmailTools'
+      'GitHub: <a href="https://github.com/CodePaintStudio/CP-EmailTools" target="_blank">CodePaintStudio/CP-EmailTools</a>'
     ]
   }
 ])
@@ -136,7 +136,13 @@ const handleClose = () => {
       <div class="steps-section">
         <el-timeline>
           <el-timeline-item v-for="(step, index) in steps" :key="index" placement="top">
-            <h3 class="step-title">{{ step.title }}</h3>
+            <h3 class="step-title">
+              <el-icon :class="`step-icon-${index}`">
+                <component :is="step.icon" />
+              </el-icon>
+              {{ step.title }}
+            </h3>
+
             <div class="step-content">
               <p class="step-description">{{ step.content }}</p>
               <ol class="sub-steps" v-if="step.subSteps">
@@ -170,9 +176,11 @@ const handleClose = () => {
             class="notice-card"
           >
             <ul class="notice-list">
-              <li v-for="(detail, detailIndex) in note.details" :key="detailIndex">
-                {{ detail }}
-              </li>
+              <li
+                v-for="(detail, detailIndex) in note.details"
+                :key="detailIndex"
+                v-html="detail"
+              ></li>
             </ul>
           </el-alert>
         </div>
