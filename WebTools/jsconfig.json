@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["/WebTools/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

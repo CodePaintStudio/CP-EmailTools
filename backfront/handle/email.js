@@ -114,6 +114,7 @@ const sendEmails = async (req, res) => {
     receiverItemsArray,
     content,
   } = req.body;
+  // console.log('开始发送邮件');
   const smtpServerObj = await createSmtpServer(email, password);
   //没创建成功直接返回前端信息并退出
   if (!smtpServerObj.success) {
