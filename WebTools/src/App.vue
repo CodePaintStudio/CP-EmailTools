@@ -1,7 +1,7 @@
-<script setup>
-import MainPage from '@/views/MainPage.vue'
-</script>
+<script setup></script>
 
 <template>
-  <MainPage></MainPage>
+  <router-view></router-view>
 </template>
+
+<style lang="scss" scoped></style>
