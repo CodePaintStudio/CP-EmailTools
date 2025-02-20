@@ -7,6 +7,7 @@ import LoginPage from '@/views/login/index.vue'
 const routes = [
   {
     path: '/',
+    // 重定向
     name: 'Login',
     component: LoginPage
   },
