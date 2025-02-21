@@ -1,7 +1,9 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 const { selectSmtpConfig } = require('../handle/nodemailerHandle') // 引入创建服务器的配置
 const { sendRes, RES_CODE } = require('../handle/errorHandle') // 引入你自己封装的响应处理函数
+const config = require('../config') // 引入配置文件，包含密钥等
 
 const router = express.Router()
 
@@ -34,8 +36,20 @@ router.post('/verify', async (req, res) => {
   smtpServer.verify(function (error, success) {
     if (error) {
       return sendRes(res, RES_CODE.PARAM_ERROR, '请检查账号密码是否正确！')
-    } else {
-      return sendRes(res, RES_CODE.SUCCESS, '账号密码验证成功')
+    } {
+      // 账号密码验证成功后，生成JWT token
+      const user = {
+        email: email, // 将email作为token的载荷
+      }
+      // 生成JWT token
+      const token = jwt.sign(user, config.jwtSecretKey, {
+        expiresIn: config.expiresIn, // 设置token的过期时间
+      })
+      // 返回响应，包括生成的token
+      return sendRes(res, RES_CODE.SUCCESS, {
+        msg:'账号密码验证成功',
+        token: 'Bearer ' + token,
+      })
     }
   })
 })

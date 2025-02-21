@@ -63,7 +63,7 @@ async function onSubmit() {
         loading.close()
 
         // 存储用户信息
-        UserStore.generateToken()
+        UserStore.setToken(response.data.data.token)
         UserStore.setEmail(emailData.value.email)
         UserStore.setPassword(emailData.value.password)
 
@@ -93,7 +93,13 @@ function onReset() {
       <div class="text">CP-EmailTools</div>
     </div>
     <!-- 表单 -->
-    <el-form ref="formRef" :model="emailData" label-width="auto" :rules="rules" class="el-form">
+    <el-form
+      ref="formRef"
+      :model="emailData"
+      label-width="auto"
+      :rules="rules"
+      class="el-form"
+    >
       <div class="text">登录</div>
       <!-- 邮箱 -->
       <el-form-item prop="email" class="el-form-item">
@@ -116,10 +122,16 @@ function onReset() {
       </el-form-item>
       <!-- 确定取消按钮 -->
       <div class="bt">
-        <el-button color="#3370FF" type="primary" @click="onSubmit" class="inner_bt"
+        <el-button
+          color="#3370FF"
+          type="primary"
+          @click="onSubmit"
+          class="inner_bt"
           >确认</el-button
         >
-        <el-button plain="true" @click="onReset" class="inner_bt">清空</el-button>
+        <el-button plain="true" @click="onReset" class="inner_bt"
+          >清空</el-button
+        >
       </div>
     </el-form>
   </div>
