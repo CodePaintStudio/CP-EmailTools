@@ -38,42 +38,44 @@ onMounted(() => {
 
 async function onSubmit() {
   formRef.value.validate(async (valid) => {
+    if (!valid) {
+      ElMessage.error('请填写完整的登录信息')
+      return false
+    }
+
     const loading = ElLoading.service({
       lock: true,
       text: '登录中...',
       background: 'rgba(0, 0, 0, 0.7)'
     })
-    if (valid) {
-      try {
-        const response = await LoginVerify({
-          email: emailData.value.email,
-          password: emailData.value.password
+
+    try {
+      const response = await LoginVerify({
+        email: emailData.value.email,
+        password: emailData.value.password
+      })
+
+      if (response.data.code === 0) {
+        ElMessage({
+          message: '登录成功',
+          type: 'success'
         })
-
-        if (response.data.code === 0) {
-          ElMessage({
-            message: '登录成功',
-            type: 'success'
-          })
-          loading.close()
-
-          // 存储用户信息
-          UserStore.generateToken()
-          UserStore.setEmail(emailData.value.email)
-          UserStore.setPassword(emailData.value.password)
-
-          // 跳转到主页面
-          router.push('/main')
-        } else {
-          ElMessage.error(response.info || '登录失败，请检查邮箱和授权码')
-        }
-      } catch (error) {
         loading.close()
-        ElMessage.error('登录请求失败，请稍后再试')
+
+        // 存储用户信息
+        UserStore.setToken(response.data.data.token)
+        UserStore.setEmail(emailData.value.email)
+        UserStore.setPassword(emailData.value.password)
+
+        // 跳转到主页面
+        router.push('/main')
+      } else {
+        loading.close()
+        ElMessage.error(response.info || '登录失败，请检查邮箱和授权码')
       }
-    } else {
-      console.log('error submit!')
-      return false
+    } catch (error) {
+      loading.close()
+      ElMessage.error('登录请求失败，请稍后再试')
     }
   })
 }
@@ -175,12 +177,18 @@ function onReset() {
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 600px;
-    height: 300px;
+    width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+
+    @media screen and (max-width: 768px) {
+      width: 100%;
+      max-width: 350px;
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+
     .text {
       font-size: 1.5rem;
       font-weight: bold;
@@ -194,7 +202,12 @@ function onReset() {
 
   .el-form-item {
     width: 80%;
-    height: 60px;
+    margin-bottom: 1.5rem;
+
+    @media screen and (max-width: 768px) {
+      width: 85%;
+      margin-bottom: 1rem;
+    }
   }
 
   .el-form-item label {
@@ -204,21 +217,35 @@ function onReset() {
 
   .input-field {
     width: 100%;
-    height: 80%;
+
+    :deep(.el-input__inner) {
+      height: 40px;
+      line-height: 40px;
+    }
   }
 
   .bt {
+    width: 80%;
     display: flex;
-    justify-content: space-around;
-  }
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
 
-  .el-button {
-    font-size: 1rem;
-    padding: 0.75rem 1.5rem;
-  }
+    @media screen and (max-width: 768px) {
+      width: 85%;
+      flex-direction: column;
+      gap: 1rem;
+    }
 
-  .inner_bt {
-    margin: 0 3.5rem;
+    .inner_bt {
+      min-width: 120px;
+
+      @media screen and (max-width: 768px) {
+        width: 100%;
+        margin: 0;
+        height: 40px;
+      }
+    }
   }
 }
 

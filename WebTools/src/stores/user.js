@@ -8,12 +8,6 @@ export const useUserStore = defineStore(
     const email = ref('')
     const password = ref('')
 
-    function generateToken() {
-      Token.value =
-        Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15)
-    }
-
     function setToken(e) {
       Token.value = e
     }
@@ -36,7 +30,6 @@ export const useUserStore = defineStore(
 
     return {
       Token,
-      generateToken,
       setToken,
       clearToken,
       hasToken,

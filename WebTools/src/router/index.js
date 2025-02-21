@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import MainPage from '@/views/MainPage.vue'
+import MainPage from '@/views/mainpage/index.vue'
 import LoginPage from '@/views/login/index.vue'
 
 // 创建路由实例
 const routes = [
   {
     path: '/',
+    // 重定向
     name: 'Login',
     component: LoginPage
   },
